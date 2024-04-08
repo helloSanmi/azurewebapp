@@ -4,20 +4,26 @@ const bodyParser = require('body-parser');
 const sql = require('mssql');
 const cors = require('cors');
 
+// Validate critical environment variables at startup
+if (!process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME || !process.env.DB_SERVER) {
+    console.error('Fatal Error: One or more database configuration environment variables are not set.');
+    process.exit(1);
+}
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// CORS Configuration
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' ? 
+            ['https://azurewebapplearncode.azurewebsites.net'] : 
+            ['http://localhost:3000', 'https://azurewebapplearncode.azurewebsites.net'],
+    credentials: true
+};
 
-app.use(cors({
-  origin: 'https://azurewebapplearncode.azurewebsites.net'
-}));
-
-
-// Middleware
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.static('public')); // Serve static files from 'public' directory
-
 
 // Azure SQL Database configuration
 const dbConfig = {
@@ -32,7 +38,7 @@ const dbConfig = {
     },
     options: {
         encrypt: true, // Necessary for Azure SQL Database
-        trustServerCertificate: false // Change to true if necessary for your environment
+        trustServerCertificate: false
     }
 };
 
@@ -43,10 +49,12 @@ const poolPromise = new sql.ConnectionPool(dbConfig)
         console.log('Connected to MSSQL');
         return pool;
     })
-    .catch(err => console.log('Database Connection Failed! Bad Config: ', err));
+    .catch(err => {
+        console.error('Database Connection Failed! Bad Config: ', err);
+        process.exit(1); // Exit if cannot connect to database
+    });
 
 // Routes
-// GET route to fetch all messages
 app.get('/messages', async (req, res) => {
     try {
         const pool = await poolPromise;
@@ -58,7 +66,6 @@ app.get('/messages', async (req, res) => {
     }
 });
 
-// POST route to submit a new message
 app.post('/messages', async (req, res) => {
     const { name, message } = req.body;
     if (!name || !message) {
@@ -68,7 +75,9 @@ app.post('/messages', async (req, res) => {
     try {
         const pool = await poolPromise;
         await pool.request()
-            .query(`INSERT INTO Messages (Name, Message) VALUES ('${name}', '${message}')`);
+            .input('Name', sql.VarChar, name)
+            .input('Message', sql.VarChar, message)
+            .query('INSERT INTO Messages (Name, Message) VALUES (@Name, @Message)');
         res.status(201).json({ message: 'Message added successfully' });
     } catch (err) {
         console.error('SQL error', err);
@@ -76,7 +85,6 @@ app.post('/messages', async (req, res) => {
     }
 });
 
-// Start server
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });

@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<link rel="icon" href="path/to/favicon.ico" type="image/x-icon">
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Guestbook</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="path/to/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <h1>Welcome to Our Guestbook</h1>
     <div id="form">
-        <input type="text" id="name" placeholder="Your Name" />
+        <input type="text" id="name" placeholder="Your Name">
         <textarea id="message" placeholder="Your Message"></textarea>
-        <button onclick="submitMessage()">Submit</button>
+        <button id="submitButton">Submit</button>
     </div>
     <div id="messages"></div>
 
