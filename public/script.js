@@ -1,37 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
     fetchMessages(); // Call fetchMessages to load messages initially
 
-    const submitButton = document.getElementById('submitButton');
-    submitButton.addEventListener('click', submitMessage);
+    document.getElementById('submitButton').addEventListener('click', async (event) => {
+        event.preventDefault(); // Prevent form from submitting in the traditional way
+        await submitMessage();
+    });
 });
 
 async function fetchMessages() {
     try {
         const response = await fetch('/messages');
-        const messages = await response.json(); // Parse the JSON response
+        const messages = await response.json();
         const messagesDiv = document.getElementById('messages');
 
-        // Clear existing messages
-        messagesDiv.innerHTML = '';
+        messagesDiv.innerHTML = ''; // Clear existing messages
 
-        // Check if messages exist and is an array
         if (Array.isArray(messages) && messages.length) {
-            // Iterate over each message and append it to the messagesDiv
             messages.forEach(msg => {
-                if (msg.name && msg.message) { // Ensure 'name' and 'message' fields exist
-                    const messageElement = `<p><strong>${msg.name}</strong>: ${msg.message}</p>`;
-                    messagesDiv.innerHTML += messageElement;
-                }
+                // Assuming msg.name and msg.message are the correct properties
+                const messageElement = `<p><strong>${msg.name}</strong>: ${msg.message}</p>`;
+                messagesDiv.innerHTML += messageElement;
             });
         } else {
-            // Display a 'no messages' message or handle empty state
             messagesDiv.innerHTML = '<p>No messages found.</p>';
         }
     } catch (error) {
         console.error('Error fetching messages:', error);
     }
 }
-
 
 async function submitMessage() {
     const name = document.getElementById('name').value.trim();
@@ -54,7 +50,7 @@ async function submitMessage() {
         if (response.ok) {
             document.getElementById('name').value = ''; // Clear the input fields
             document.getElementById('message').value = '';
-            fetchMessages(); // Refresh the list of messages
+            await fetchMessages(); // Refresh the list of messages
         } else {
             const errorText = await response.text();
             console.error('Failed to submit message:', errorText);
