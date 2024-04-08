@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
 const cors = require('cors');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -13,10 +15,10 @@ app.use(cors()); // Enable CORS for all routes
 
 // Azure SQL Database configuration
 const dbConfig = {
-    user: 'azureadmin',
-    password: 'Password@12345',
-    database: 'azurewebapp',
-    server: 'azurewebapplearn.database.windows.net',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    server: process.env.DB_SERVER,
     pool: {
         max: 10,
         min: 0,
