@@ -10,14 +10,14 @@ const port = process.env.PORT || 3000;
 
 
 app.use(cors({
-  origin: ['http://azurewebapplearncode.azurewebsites.net']
+  origin: 'https://azurewebapplearncode.azurewebsites.net'
 }));
 
 
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static('public')); // Serve static files from 'public' directory
-app.use(cors()); // Enable CORS for all routes
+
 
 // Azure SQL Database configuration
 const dbConfig = {
