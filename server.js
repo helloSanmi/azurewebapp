@@ -8,6 +8,12 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
+const cors = require('cors');
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://azurewebapplearncode.azurewebsites.net']
+}));
+
+
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static('public')); // Serve static files from 'public' directory
