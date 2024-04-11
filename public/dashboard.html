@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="dashboard-style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <div class="user-info">
+            <div class="user-icon">&#128100;</div> <!-- Placeholder for user image/icon -->
+            <span class="user-name" id="welcomeMessage">Welcome, [username]</span>
+        </div>
+        <button id="logoutButton">Logout</button>
+    </header>
+    
+    <div class="main-content">
+        <div class="notes-container">
+            <h2>Your Notes</h2>
+            <div class="note-add">
+                <textarea id="noteInput" placeholder="Start typing a note..."></textarea>
+                <button id="addNote">Add Note</button>
+            </div>
+            <ul class="note-list" id="notesList">
+                <!-- Notes will be appended here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
