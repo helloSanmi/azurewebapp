@@ -107,12 +107,12 @@ async function fetchNotes() {
     }
 };
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const noteInput = document.getElementById('noteInput');
     const startDictationButton = document.getElementById('startDictationButton');
     const stopDictationButton = document.getElementById('stopDictationButton');
 
-    // Check for support (currently supported in Chrome and Edge)
     if (!('webkitSpeechRecognition' in window)) {
         alert("Your browser does not support speech recognition. Please use Google Chrome or Microsoft Edge.");
         startDictationButton.disabled = true;
@@ -120,8 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const recognition = new webkitSpeechRecognition();
-    recognition.continuous = true; // Continuously captures speech
-    recognition.interimResults = true; // Also shows interim results
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    let finalTranscript = ''; // This variable will store the final text
 
     recognition.onstart = function() {
         noteInput.placeholder = "Listening...";
@@ -140,14 +142,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     recognition.onresult = function(event) {
-        let transcript = '';
+        let interimTranscript = '';
+
+        // Iterate through results, and differentiate between final and interim results
         for (let i = event.resultIndex; i < event.results.length; ++i) {
-            transcript += event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript;
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
         }
-        noteInput.value += transcript; // Append the transcript to whatever is already in the textarea
+        noteInput.value = finalTranscript + interimTranscript; // Display both final and interim results in the input
     };
 
     startDictationButton.onclick = function() {
+        finalTranscript = ''; // Reset the final transcript at the start of each session
         recognition.start();
     };
 
@@ -155,4 +164,3 @@ document.addEventListener('DOMContentLoaded', () => {
         recognition.stop();
     };
 });
-
