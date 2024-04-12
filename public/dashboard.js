@@ -106,3 +106,53 @@ async function fetchNotes() {
         alert(`Error: ${error.message}`);
     }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const noteInput = document.getElementById('noteInput');
+    const startDictationButton = document.getElementById('startDictationButton');
+    const stopDictationButton = document.getElementById('stopDictationButton');
+
+    // Check for support (currently supported in Chrome and Edge)
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("Your browser does not support speech recognition. Please use Google Chrome or Microsoft Edge.");
+        startDictationButton.disabled = true;
+        return;
+    }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = true; // Continuously captures speech
+    recognition.interimResults = true; // Also shows interim results
+
+    recognition.onstart = function() {
+        noteInput.placeholder = "Listening...";
+        startDictationButton.style.display = 'none';
+        stopDictationButton.style.display = 'inline';
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech Recognition Error: ', event.error);
+    };
+
+    recognition.onend = function() {
+        noteInput.placeholder = "Start typing a note...";
+        startDictationButton.style.display = 'inline';
+        stopDictationButton.style.display = 'none';
+    };
+
+    recognition.onresult = function(event) {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            transcript += event.results[i][0].transcript;
+        }
+        noteInput.value += transcript; // Append the transcript to whatever is already in the textarea
+    };
+
+    startDictationButton.onclick = function() {
+        recognition.start();
+    };
+
+    stopDictationButton.onclick = function() {
+        recognition.stop();
+    };
+});
+
