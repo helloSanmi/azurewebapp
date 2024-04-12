@@ -43,7 +43,7 @@ sql.connect(dbConfig).then(pool => {
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://azurewebapplearncode.azurewebsites.net', // Update with your frontend server's address if different
+    origin: ['https://azurewebapplearncode.azurewebsites.net', 'http://localhost:3000/'], // Update with your frontend server's address if different
     credentials: true,
 }));
 
