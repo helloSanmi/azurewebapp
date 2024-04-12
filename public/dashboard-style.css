@@ -101,16 +101,6 @@ button:hover {
     padding: 0;
 }
 
-/* .note-list li {
-    background-color: #f9f9f9;
-    padding: 12px;
-    margin-top: 10px;
-    border-left: 5px solid #4CAF50;
-    border-radius: 4px;
-}
- */
-
-
 
 .note-list li {
     display: flex;
