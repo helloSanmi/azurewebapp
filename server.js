@@ -151,4 +151,47 @@ app.get('/notes', verifyToken, async (req, res) => {
 });
 
 
+// Edit a note
+app.put('/notes/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        await pool.request()
+            .input('id', sql.Int, id)
+            .input('userId', sql.Int, userId)
+            .input('title', sql.NVarChar, title)
+            .input('content', sql.NVarChar, content)
+            .query('UPDATE notes SET title = @title, content = @content WHERE id = @id AND userId = @userId');
+
+        res.status(200).send('Note updated successfully');
+    } catch (err) {
+        console.error('Database query failed:', err);
+        res.status(500).send('Error updating note');
+    }
+});
+
+
+// Delete a note
+app.delete('/notes/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        await pool.request()
+            .input('id', sql.Int, id)
+            .input('userId', sql.Int, userId)
+            .query('DELETE FROM notes WHERE id = @id AND userId = @userId');
+
+        res.status(200).send('Note deleted successfully');
+    } catch (err) {
+        console.error('Database query failed:', err);
+        res.status(500).send('Error deleting note');
+    }
+});
+
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -101,10 +101,47 @@ button:hover {
     padding: 0;
 }
 
-.note-list li {
+/* .note-list li {
     background-color: #f9f9f9;
     padding: 12px;
     margin-top: 10px;
     border-left: 5px solid #4CAF50;
     border-radius: 4px;
+}
+ */
+
+
+
+.note-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 12px;
+    margin-top: 10px;
+    border-left: 5px solid #4CAF50;
+    border-radius: 4px;
+}
+
+.edit-note, .delete-note {
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.edit-note {
+    background-color: #ffc107;
+    color: white;
+    border-radius: 4px;
+}
+
+.delete-note {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 4px;
+}
+
+.edit-note:hover, .delete-note:hover {
+    opacity: 0.8;
 }

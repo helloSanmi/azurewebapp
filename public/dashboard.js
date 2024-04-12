@@ -74,3 +74,63 @@ async function fetchNotes() {
         alert(`Error: ${error.message}`);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Existing initializations and event listeners
+    fetchNotes();
+
+    // Update existing note fetch and display function
+    async function fetchNotes() {
+        try {
+            const response = await fetch('/notes', {
+                method: 'GET',
+                headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')},
+            });
+
+            if (response.ok) {
+                const notes = await response.json();
+                const notesList = document.getElementById('notesList');
+                notesList.innerHTML = ''; // Clear existing notes
+
+                notes.forEach(note => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span class="note-content">${note.content}</span>
+                        <button class="edit-note" data-id="${note.id}">Edit</button>
+                        <button class="delete-note" data-id="${note.id}">Delete</button>
+                    `;
+                    notesList.appendChild(li);
+
+                    li.querySelector('.edit-note').addEventListener('click', async function() {
+                        const newContent = prompt('Edit your note:', note.content);
+                        if (newContent) {
+                            await fetch('/notes/' + note.id, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                                },
+                                body: JSON.stringify({ title: "Note", content: newContent }),
+                            });
+                            fetchNotes();
+                        }
+                    });
+
+                    li.querySelector('.delete-note').addEventListener('click', async function() {
+                        if (confirm('Are you sure you want to delete this note?')) {
+                            await fetch('/notes/' + note.id, {
+                                method: 'DELETE',
+                                headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')},
+                            });
+                            fetchNotes();
+                        }
+                    });
+                });
+            } else {
+                throw new Error('Failed to fetch notes');
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    }
+});
