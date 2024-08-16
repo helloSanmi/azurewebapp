@@ -65,6 +65,7 @@ body, html {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Needed for proper toolbar positioning */
 }
 
 .note-add {
@@ -74,17 +75,14 @@ body, html {
     margin-bottom: 20px;
 }
 
-textarea {
+#editor-container {
     width: 100%;
-    min-height: 100px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    height: 200px;
+    border: 1px solid #ccc; /* Give the editor the same border style */
+    border-radius: 4px; /* Rounded corners for the editor */
 }
 
-
 button {
-    /* width: 100%; */
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -103,7 +101,6 @@ button:hover {
     margin: 0;
     padding: 0;
 }
-
 
 .note-list li {
     display: flex;
