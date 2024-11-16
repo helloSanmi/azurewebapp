@@ -55,9 +55,12 @@ body, html {
     flex-grow: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 20px;
+    overflow-y: auto;
 }
 
+/* Notes container with dynamic growth */
 .notes-container {
     width: 80%;
     max-width: 600px;
@@ -65,41 +68,39 @@ body, html {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative; /* Needed for proper toolbar positioning */
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto; /* Allow scrolling for overflowing notes */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Add spacing between notes */
 }
 
+/* Writing note field */
 .note-add {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
+    width: 70%; /* Adjust width for better layout */
 }
 
 #editor-container {
     width: 100%;
     height: 200px;
-    border: 1px solid #ccc; /* Give the editor the same border style */
-    border-radius: 4px; /* Rounded corners for the editor */
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
+    margin-bottom: 20px; /* Add space below the editor */
 }
 
-button:hover {
-    background-color: #218838;
-}
-
+/* Notes list shifted to the right */
 .note-list {
-    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin: 0;
     padding: 0;
+    margin-left: 10%; /* Shift notes to the right */
 }
 
 .note-list li {
@@ -108,9 +109,10 @@ button:hover {
     align-items: center;
     background-color: #f9f9f9;
     padding: 12px;
-    margin-top: 10px;
     border-left: 5px solid #4CAF50;
     border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word; /* Wrap long content */
 }
 
 .edit-note, .delete-note {
@@ -134,4 +136,19 @@ button:hover {
 
 .edit-note:hover, .delete-note:hover {
     opacity: 0.8;
+}
+
+/* Button styling */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
 }
