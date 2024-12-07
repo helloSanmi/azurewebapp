@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const sql = require('mssql');
+const path = require('path'); // Add this line
 
 const app = express();
 const PORT = process.env.PORT || 3000;
